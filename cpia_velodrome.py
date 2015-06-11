@@ -180,15 +180,21 @@ def consigne():
                         EcrireRegistre(36,2000-dec_ete,0)
                         EcrireRegistre(37,2000+dec_ete,0)
 			Blocage_fonctionnement=1
-		        if Assemblage<>5:
-                                EcrireRegistre(33,5)
-                        if Priorite<>3:
-                                EcrireRegistre(34,2)
+			if resistance:
+		        	if Assemblage<>5:
+                                	EcrireRegistre(33,5)
+                        	if Priorite<>2:
+                                	EcrireRegistre(34,2)
 
-			if permResistance<>0:
-				EcrireRegistre(50,0)
-			if permVanneChaud<>0:
-				EcrireRegistre(53,0)
+				if permResistance<>0:
+					EcrireRegistre(50,0)
+				if permVanneChaud<>0:
+					EcrireRegistre(53,0)
+			else:
+				if Assemblage<>4:
+					EcrireRegistre(33,4)
+				
+				
                 else:
 
                         decalage_temp_hiver=max(min(1000,(2000-pc_hiver)),-1000)
@@ -200,14 +206,19 @@ def consigne():
                         EcrireRegistre(36,2000-dec_hiver,0)
                         EcrireRegistre(37,2000+dec_hiver)
 			Blocage_fonctionnement=1
-			if Assemblage<>5:
-                                EcrireRegistre(33,5)
-                        if Priorite<>4:
-                                EcrireRegistre(34,3)
-			if permResistance<>5:
-				EcrireRegistre(50,5)
-			if permVanneChaud<>2:
-				EcrireRegistre(53,2)
+			if resistance:
+				if Assemblage<>5:
+                                	EcrireRegistre(33,5)
+                        	if Priorite<>3:
+                                	EcrireRegistre(34,3)
+				if permResistance<>5:
+					EcrireRegistre(50,5)
+				if permVanneChaud<>2:
+					EcrireRegistre(53,2)
+
+			else:
+				if Assemblage<>3:
+					EcrireRegistre(33,3)
 
                 co_init=co
 
@@ -266,52 +277,6 @@ def mode():
         global initZ4
         global initZ5
 	global ChangerTemp
-	#print str((tempZ1+(pc_hiver-2000))) + ' > ' + str((pc_ete+(pcZ1-2000)))	
-	"""	if ((tempZ1+(pc_hiver-2000))>(pc_ete+(pcZ1-2000))) * z1:
-                z1F=1
-                z1C=0
-	elif z1F:
-		z1F=0
-        elif ((tempZ1+(pc_ete-2000))<(pc_hiver+(pcZ1-2000))) * z1:
-                z1C=1
-                z1F=0
-	elif z1C:
-		z1C=0
-		#z1F=0
-	if ((tempZ2+(pc_hiver-2000))>(pc_ete+(pcZ2-2000))) * z2:
-		z2F=1
-		z2C=0
-	elif ((tempZ2+(pc_ete-2000))<(pc_hiver+(pcZ2-2000))) * z2:
-		z2C=1
-		z2F=0
-        else:
-                z2C=0
-                z2F=0
-	if ((tempZ3+(pc_hiver-2000))>(pc_ete+(pcZ3-2000))) * z3:
-                z3F=1
-                z3C=0
-        elif ((tempZ3+(pc_ete-2000))<(pc_hiver+(pcZ3-2000))) * z3:
-                z3C=1
-                z3F=0
-        else:
-                z3C=0
-                z3F=0
-        if ((tempZ4+(pc_hiver-2000))>(pc_ete+(pcZ4-2000))) * z4:
-                z4F=1
-                z4C=0
-        elif ((tempZ4+(pc_ete-2000))<(pc_hiver+(pcZ4-2000))) * z4:
-                z4C=1
-                z4F=0
-        if ((tempZ5+(pc_hiver-2000))>(pc_ete+(pcZ5-2000))) * z5:
-                z5F=1
-                z5C=0
-        elif ((tempZ5+(pc_ete-2000))<(pc_hiver+(pcZ5-2000))) * z5:
-                z5C=1
-                z5F=0
-	print 'z1 Chaud = ' + str(z1C) + ' // Froid = ' +str(z1F)
-	print 'z2 Chaud = ' + str(z2C) + ' // Froid = ' +str(z2F)
-	print 'z3 Chaud = ' + str(z3C) + ' // Froid = ' +str(z3F)
-	"""
 	DEC_PC_Z1=pcZ1-2000
 	PC_RE_Z1=pc_ete+DEC_PC_Z1
 	PC_RH_Z1=pc_hiver+DEC_PC_Z1
@@ -466,7 +431,7 @@ def mode():
 
 EcrireRegistre(71,0)
 EcrireRegistre(72,0)
-
+resistance_init=LireRegistre(285)
 while 1:
 	time.sleep(0.5)
 	test=LireRegistre(148)
@@ -490,7 +455,6 @@ while 1:
         Mode=LireRegistre(70)
         Priorite=LireRegistre(34)
 	Reg36=LireRegistre(36)
-#	print 'je lis le registre36) ' + str(Reg36)
         Bloquer=LireRegistre(32)
         comZ1=LireRegistre(157)
         comZ2=LireRegistre(181)
@@ -509,14 +473,28 @@ while 1:
         dec_z3=LireRegistre(196)*10
         dec_z4=LireRegistre(220)*10
         dec_z5=LireRegistre(244)*10
-
+	autor_res=LireRegistre(285)
+	print "autorisation resistance= " + str(autor_res)
+	if LireRegistre(77)==0:
+		EcrireRegistre(285,2)
+		EcrireRegistre(77,1)
+	if resistance_init<>autor_res:
+		co_init=3
+		resistance_init=autor_res
+	if co==0:
+		if autor_res==3 or autor_res==2:
+			resistance=True
+		else:
+			resistance=False
+	else:
+		if autor_res==4 or autor_res==2:
+			resistance=True
+		else:
+			resistance=False 
         time.sleep(0.5)
         ts=time.time()
+
         vanne()
         consigne()
-        mode()
-#	blocage()
-#	print 'comm z1 : ' + str(comZ1)
-#	print 'comm z2 : ' + str(comZ2)
-#	print 'comm z3 : ' + str(comZ3)
-
+	if resistance:
+	        mode()
