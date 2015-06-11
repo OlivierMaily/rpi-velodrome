@@ -504,11 +504,11 @@ while 1:
         presZ5=LireRegistre(236)
 	permResistance=LireRegistre(50)
 	permVanneChaud=LireRegistre(53)
-	dec_z1=LireRegistre(148)
-        dec_z2=LireRegistre(172)
-        dec_z3=LireRegistre(196)
-        dec_z4=LireRegistre(220)
-        dec_z5=LireRegistre(244)
+	dec_z1=LireRegistre(148)*10
+        dec_z2=LireRegistre(172)*10
+        dec_z3=LireRegistre(196)*10
+        dec_z4=LireRegistre(220)*10
+        dec_z5=LireRegistre(244)*10
 
         time.sleep(0.5)
         ts=time.time()
