@@ -181,10 +181,10 @@ def consigne():
                         EcrireRegistre(37,2000+dec_ete,0)
 			Blocage_fonctionnement=1
 			if resistance:
-		        	if Assemblage<>5:
-                                	EcrireRegistre(33,5)
-                        	if Priorite<>2:
-                                	EcrireRegistre(34,2)
+		        	if Assemblage<>4:
+                                	EcrireRegistre(33,4)
+                        #	if Priorite<>2:
+                         #       	EcrireRegistre(34,2)
 
 				if permResistance<>0:
 					EcrireRegistre(50,0)
@@ -356,16 +356,16 @@ def mode():
 		print 'anticourcycle = '+str(anticourcycle)
                 if ((z1F or z2F or z3F or z4F or z5F) and Assemblage==6 and ChangerTemp==0 and not anticourcycle):
                    	
-			if Assemblage<>5:
-                                EcrireRegistre(33,5)
-                        if Priorite<>3:
-                                EcrireRegistre(34,2)
+			if Assemblage<>4
+                                EcrireRegistre(33,4)
+#                        if Priorite<>3:
+ #                               EcrireRegistre(34,2)
 			
                         ChangerTemp=1
 			temps_dem=temps
 			anticourcycle=True
 			print 'TEmps dem='+str(temps_dem)
-                elif  (not (z1F or z2F or z3F or z4F or z5F) and (z1C or z2C or z3C or z4C or z5C) and Assemblage==5 and ChangerTemp==0 and not anticourcycle):
+                elif  (not (z1F or z2F or z3F or z4F or z5F) and (z1C or z2C or z3C or z4C or z5C) and Assemblage==4 and ChangerTemp==0 and not anticourcycle):
                         if Assemblage<>6:
                                 EcrireRegistre(33,6)
                         if Mode<>1:
