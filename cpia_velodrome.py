@@ -397,7 +397,7 @@ def mode():
                         ChangerTemp=0
                         Blocage_fonctionnement=1
 	if anticourcycle:
-		if (temps>temps_dem+5):
+		if (temps>temps_dem+600):
 			anticourcycle=False
         if Blocage_fonctionnement==1:
                 if Bloquer<>2:
