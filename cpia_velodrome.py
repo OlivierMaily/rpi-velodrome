@@ -62,6 +62,7 @@ co_init=2
 ChangerTemp=0
 compteur=0
 Compt=0
+#m.write_register(280,1)
 anticourcycle=False
 #Blocage_fonctionnement=0
 Write=False
@@ -76,15 +77,19 @@ class Exception_valeur(Exception):
         def _str_(self):
                 return self.raison
 def writeReg(Reg,valeur,sig=False):
-	ancienne=LireRegistre(Reg)
-	if Reg==36:
-		print 'Reg36 = ' +str(ancienne)
-        if ancienne<>valeur:
-        	if sig:
-                	m.write_register(Reg,valeur,signed=True)
-                else:
-                        m.write_register(Reg,valeur)
-		raise Exception_valeur('Test')
+#	notWrite=False
+#	ancienne=LireRegistre(Reg)
+#	time.sleep(0.1)
+#	if Reg==36:
+#		if valeur<1000 or valeur >2000:
+#			notWrite=True	
+#			print 'J essaye d ecrire le Reg36 a la valeur = ' +str(ancienne) + ' qui etait a la valeur = ' + str(ancienne)
+#        if (ancienne<>valeur) and not  notWrite:
+        if sig:
+               	m.write_register(Reg,valeur,signed=True)
+        else:
+                m.write_register(Reg,valeur)
+	raise Exception_valeur('Test')
 def ReadRegister(registre):
 	result=m.read_register(registre,0,signed=True)
 #	print 'je lis registre ' + str(registre) + ' qui a la valeur ' + str(result)
@@ -108,37 +113,77 @@ def LireRegistre(registre):
                 	print 'EOF ERROR'
 		else:
 			return res
+
+
+def ReadRegisters(registre,nbreg):
+        result=m.read_registers(registre,nbreg,functioncode=3)
+#       print 'je lis registre ' + str(registre) + ' qui a la valeur ' + str(result)
+        #if not isinstance(result,int):
+        #        raise NoneException('NoneType eviter')
+        #else:
+        return result
+def LireRegistres(registre,nbreg):
+        while 1:
+                try:
+                        res=ReadRegisters(registre,nbreg)
+                except NoneException:
+                        print 'None eviter'
+                except IOError:
+                        print 'lecture Impossible du registre :'
+                        print registre
+                except ValueError:
+                        print 'lecture Impossible du registre a cause du type de valeur :'
+                        print registre
+ #               except TypeError:
+  #                      print 'EOF ERROR'
+                else:
+                        return res
+
+
 def EcrireRegistre(Reg,valeur,sig=False):
         global Compt
 	global Write
+	
 	Write=True
         while 1:
-                try:
+        	notWrite=False
+	        try:
 			ancienne=LireRegistre(Reg)
+			time.sleep(0.1)
+#        		if Reg==36:
+#                		if valeur<1000 or valeur >2000:
+#                        		notWrite=True
+                        
+#					print 'J essaye d ecrire le Reg36 a la valeur = ' +str(ancienne) + ' qui etait a la valeur = ' + str(ancienne)
+#        		if Reg==37:
+#				if valeur <2000 or valeur>3000:
+#					notWrite=True
+			if (ancienne<>valeur) and not  notWrite:
+
 #			print 'je veux ecrire registre ' + str(Reg) + ' qui a la valeur ' + str(ancienne) + ' a la valeur ' + str(valeur)
-			if ancienne<>valeur:
+			#if ancienne<>valeur:
 	               		if sig:
         	               		m.write_register(Reg,valeur,signed=True)
                			else:
                        			m.write_register(Reg,valeur)
 			else:
 				Write=False
-				print 'je n ecris pas'
+#				print 'je n ecris pas'
                 except IOError:
                         Compt+=1
-			print 'ecriture Impossible du registre :'
-			print Reg
+#			print 'ecriture Impossible du registre :'
+#			print Reg
 		except TypeError:
                         Compt+=1
-                        print 'ecriture Impossible du registre a cause de type :'
-                        print Reg
+   #                     print 'ecriture Impossible du registre a cause de type :'
+    #                    print Reg
                 except (ValueError):
                         Compt+=1
-                        print 'Ecriture impossible a cause de valeur :'
-                        print Reg
+  #                      print 'Ecriture impossible a cause de valeur :'
+ #                       print Reg
 		else:
-			if Write:
-				print 'j ecris'
+#			if Write:
+#				print 'j ecris'
 			Compt=0
 			Write=False
 			return
@@ -168,24 +213,54 @@ def vanne():
 
 def consigne():
 #        time.sleep(0.1)
+        if presZ1 <>0:
+                z1=1
+        else:
+                z1=0
+         #       z1C=0
+        #        z1F=0
+        if presZ2 <>0:
+                z2=1
+        else:
+                z2=0
+       #         z2C=0
+      #          z2F=0
+        if presZ3 <>0:
+                z3=1
+        else:
+                z3=0
+     #           z3F=0
+    #            z3C=0
+        if presZ4 <>0:
+                z4=1
+        else:
+                z4=0
+    
+        if presZ5 <>0:
+                z5=1
+        else:
+                z5=0
+             
         global co_init
         if co<>co_init:
                 if co==1:
                         decalage_temp_ete=2000-pc_ete
-                        EcrireRegistre(148,decalage_temp_ete/10,sig=True)
-                        EcrireRegistre(172,decalage_temp_ete/10,sig=True)
-                        EcrireRegistre(196,decalage_temp_ete/10,sig=True)
-                        EcrireRegistre(220,decalage_temp_ete/10,sig=True)
-                        EcrireRegistre(244,decalage_temp_ete/10,sig=True)	
+                        if z1:
+				EcrireRegistre(148,decalage_temp_ete/10,sig=True)
+                        if z2:
+				EcrireRegistre(172,decalage_temp_ete/10,sig=True)
+                        if z3:
+				EcrireRegistre(196,decalage_temp_ete/10,sig=True)
+                        if z4:
+				EcrireRegistre(220,decalage_temp_ete/10,sig=True)
+                        if z5:
+				EcrireRegistre(244,decalage_temp_ete/10,sig=True)	
                         EcrireRegistre(36,2000-dec_ete,0)
                         EcrireRegistre(37,2000+dec_ete,0)
 			Blocage_fonctionnement=1
 			if resistance:
 		        	if Assemblage<>4:
                                 	EcrireRegistre(33,4)
-                        #	if Priorite<>2:
-                         #       	EcrireRegistre(34,2)
-
 				if permResistance<>0:
 					EcrireRegistre(50,0)
 				if permVanneChaud<>0:
@@ -198,11 +273,16 @@ def consigne():
                 else:
 
                         decalage_temp_hiver=max(min(1000,(2000-pc_hiver)),-1000)
-                        EcrireRegistre(148,int(decalage_temp_hiver/10),sig=True)
-                        EcrireRegistre(172,decalage_temp_hiver/10,sig=True)
-                        EcrireRegistre(196,decalage_temp_hiver/10,sig=True)
-                        EcrireRegistre(220,decalage_temp_hiver/10,sig=True)
-                        EcrireRegistre(244,decalage_temp_hiver/10,sig=True)
+                        if z1:
+				EcrireRegistre(148,int(decalage_temp_hiver/10),sig=True)
+                        if z2:
+				EcrireRegistre(172,decalage_temp_hiver/10,sig=True)
+                        if z3:
+				EcrireRegistre(196,decalage_temp_hiver/10,sig=True)
+                        if z4:
+				EcrireRegistre(220,decalage_temp_hiver/10,sig=True)
+                        if z5:
+				EcrireRegistre(244,decalage_temp_hiver/10,sig=True)
                         EcrireRegistre(36,2000-dec_hiver,0)
                         EcrireRegistre(37,2000+dec_hiver)
 			Blocage_fonctionnement=1
@@ -292,75 +372,135 @@ def mode():
 	DEC_PC_Z5=pcZ5-2000
         PC_RE_Z5=pc_ete+DEC_PC_Z5
         PC_RH_Z5=pc_hiver+DEC_PC_Z5
-	TEMP_R_Z1=tempZ1-dec_z1
-        TEMP_R_Z2=tempZ2-dec_z2
-        TEMP_R_Z3=tempZ3-dec_z3
-        TEMP_R_Z4=tempZ4-dec_z4
-        TEMP_R_Z5=tempZ5-dec_z5
-	#Calcul Demande Zone 1 
-	if TEMP_R_Z1>PC_RE_Z1:
-		z1C=0
-		z1F=1
-	elif TEMP_R_Z1<PC_RH_Z1:
-		z1F=0
-		z1C=1
-	else:
-		z1C=0
-		z1F=0
-	#Zone 2 calcul demande
-        if TEMP_R_Z2>PC_RE_Z2:
-		z2C=0
-                z2F=1
-        elif TEMP_R_Z2<PC_RH_Z2:
-		z2F=0
-                z2C=1
-        else:
-                z2C=0
-                z2F=0
-	#Calcul demande Zone3
-        if TEMP_R_Z3>PC_RE_Z3:
-		z3C=0
-                z3F=1
-        elif TEMP_R_Z3<PC_RH_Z3:
-		z3F=0
-                z3C=1
-        else:
-                z3C=0
-                z3F=0
-	#Calcul demande zone4
-        if TEMP_R_Z4>PC_RE_Z4:
-		z4C=0
-                z4F=1
-        elif TEMP_R_Z4<PC_RH_Z4:
-		z4F=0
-                z4C=1
-        else:
-                z4C=0
-                z4F=0
-	#calcul demande zone5
-        if TEMP_R_Z5>PC_RE_Z5:
-		z5C=0
-                z5F=1
-        elif TEMP_R_Z5<PC_RH_Z5:
-		z5F=0
-                z5C=1
-        else:
-                z5C=0
-                z5F=0
+	TEMP_R_Z1=tempZ1-dec_z1*10
+        TEMP_R_Z2=tempZ2-dec_z2*10
+        TEMP_R_Z3=tempZ3-dec_z3*10
+        TEMP_R_Z4=tempZ4-dec_z4*10
+        TEMP_R_Z5=tempZ5-dec_z5*10
+	print "temperature reele z1 "+ str(TEMP_R_Z1) 
 
-	print 'z1 Chaud = ' + str(z1C) + ' // Froid = ' +str(z1F)
-        print 'z2 Chaud = ' + str(z2C) + ' // Froid = ' +str(z2F)
-        print 'z3 Chaud = ' + str(z3C) + ' // Froid = ' +str(z3F)
+#<<<<<<< HEAD
+	Z1_Derog=(mode_z1==2)
+	Z2_Derog=(mode_z2==2)
+        Z3_Derog=(mode_z3==2)
+        Z4_Derog=(mode_z4==2)
+        Z5_Derog=(mode_z5==2)
+	Zone_Derog=Z1_Derog or Z2_Derog or Z3_Derog or Z4_Derog or Z5_Derog
+	print "derogation z1 = " + str(Z1_Derog) + " ,z2 = " + str(Z2_Derog) + " ,z3 = " + str(Z3_Derog)
+	if not Zone_Derog:
+	#Calcul Demande Zone 1 
+		if (TEMP_R_Z1>PC_RE_Z1):
+			z1C=0
+			z1F=1
+		elif (TEMP_R_Z1<PC_RH_Z1):
+			z1F=0
+			z1C=1
+		else:
+			z1C=0
+			z1F=0
+	#Zone 2 calcul demande
+        	if TEMP_R_Z2>PC_RE_Z2:
+			z2C=0
+                	z2F=1
+        	elif TEMP_R_Z2<PC_RH_Z2:
+			z2F=0
+                	z2C=1
+        	else:
+                	z2C=0
+                	z2F=0
+	#Calcul demande Zone3
+        	if TEMP_R_Z3>PC_RE_Z3:
+			z3C=0
+                	z3F=1
+        	elif TEMP_R_Z3<PC_RH_Z3:
+			z3F=0
+                	z3C=1
+        	else:
+                	z3C=0
+                	z3F=0
+	#Calcul demande zone4
+        	if TEMP_R_Z4>PC_RE_Z4:
+			z4C=0
+                	z4F=1
+        	elif TEMP_R_Z4<PC_RH_Z4:
+			z4F=0
+                	z4C=1
+        	else:
+                	z4C=0
+                	z4F=0
+	#calcul demande zone5
+        	if TEMP_R_Z5>PC_RE_Z5:
+			z5C=0
+                	z5F=1
+        	elif TEMP_R_Z5<PC_RH_Z5:
+			z5F=0
+                	z5C=1
+        	else:
+                	z5C=0
+                	z5F=0
+	else:
+	        if (TEMP_R_Z1>PC_RE_Z1) and Z1_Derog :
+                        z1C=0
+                        z1F=1
+                elif (TEMP_R_Z1<PC_RH_Z1) and Z1_Derog:
+                        z1F=0
+                        z1C=1
+                else:
+                        z1C=0
+                        z1F=0
+        #Zone 2 calcul demande
+                if (TEMP_R_Z2>PC_RE_Z2) and Z2_Derog:
+                        z2C=0
+                        z2F=1
+                elif (TEMP_R_Z2<PC_RH_Z2) and Z2_Derog:
+                        z2F=0
+                        z2C=1
+                else:
+                        z2C=0
+                        z2F=0
+        #Calcul demande Zone3
+                if (TEMP_R_Z3>PC_RE_Z3) and Z3_Derog:
+                        z3C=0
+                        z3F=1
+                elif (TEMP_R_Z3<PC_RH_Z3) and Z3_Derog:
+                        z3F=0
+                        z3C=1
+                else:
+                        z3C=0
+                        z3F=0
+        #Calcul demande zone4
+                if (TEMP_R_Z4>PC_RE_Z4) and Z4_Derog:
+                        z4C=0
+                        z4F=1
+                elif (TEMP_R_Z4<PC_RH_Z4) and Z4_Derog:
+                        z4F=0
+                        z4C=1
+                else:
+                        z4C=0
+                        z4F=0
+        #calcul demande zone5
+                if (TEMP_R_Z5>PC_RE_Z5) and Z5_Derog:
+                        z5C=0
+                        z5F=1
+                elif (TEMP_R_Z5<PC_RH_Z5) and Z5_Derog:
+                        z5F=0
+                        z5C=1
+                else:
+                        z5C=0
+                        z5F=0
+
+	print "zone 1 F= " +str(z1F) + " en chaud = " + str(z1C)
+        print "zone 2 F= " +str(z2F) + " en chaud = " + str(z2C)
+        print "zone 3 F= " +str(z3F) + " en chaud = " + str(z3C)
 	
         if co==1:
 		print 'anticourcycle = '+str(anticourcycle)
                 if ((z1F or z2F or z3F or z4F or z5F) and Assemblage==6 and ChangerTemp==0 and not anticourcycle):
                    	
-			if Assemblage<>4
+
+			if Assemblage<>4:
                                 EcrireRegistre(33,4)
-#                        if Priorite<>3:
- #                               EcrireRegistre(34,2)
-			
+
                         ChangerTemp=1
 			temps_dem=temps
 			anticourcycle=True
@@ -399,7 +539,11 @@ def mode():
 	if anticourcycle:
 		if (temps>temps_dem+600):
 			anticourcycle=False
+	print "blocage = " + str(Blocage_fonctionnement)
+	print "zone totale = " +str(zoneTot) + " zone init = " + str(zoneInit)
+	print "bloquer = " + str(Bloquer)
         if Blocage_fonctionnement==1:
+
                 if Bloquer<>2:
                         zoneInit=0
                         initZ1=0
@@ -407,7 +551,9 @@ def mode():
                         initZ3=0
                         initZ4=0
                         initZ5=0
+			print "pourquoi je n ecris pas"
                         EcrireRegistre(32,2)
+			#Bloquer=2
                 if z1==1 and comZ1<2 and initZ1==0:
                         initZ1=1
                         zoneInit+=1
@@ -433,68 +579,100 @@ EcrireRegistre(71,0)
 EcrireRegistre(72,0)
 resistance_init=LireRegistre(285)
 while 1:
-	time.sleep(0.5)
-	test=LireRegistre(148)
-	pc_hiver=LireRegistre(81)
-        pc_ete=LireRegistre(82)
-        dec_hiver=LireRegistre(83)
-	dec_ete=LireRegistre(84)
-	ouv_vanne=LireRegistre(21)
-        co=LireRegistre(12)
-        tempZ1=LireRegistre(146)
-        pcZ1=LireRegistre(147)
-        tempZ2=LireRegistre(170)
-        pcZ2=LireRegistre(171)
-        tempZ3=LireRegistre(194)
-        pcZ3=LireRegistre(195)
-        tempZ4=LireRegistre(218)
-        pcZ4=LireRegistre(219)
-        tempZ5=LireRegistre(242)
-        pcZ5=LireRegistre(243)
-        Assemblage=LireRegistre(33)
-        Mode=LireRegistre(70)
-        Priorite=LireRegistre(34)
-	Reg36=LireRegistre(36)
-        Bloquer=LireRegistre(32)
-        comZ1=LireRegistre(157)
-        comZ2=LireRegistre(181)
-        comZ3=LireRegistre(205)
-        comZ4=LireRegistre(229)
-        comZ5=LireRegistre(253)
-        presZ1=LireRegistre(140)
-        presZ2=LireRegistre(164)
-        presZ3=LireRegistre(188)
-        presZ4=LireRegistre(212)
-        presZ5=LireRegistre(236)
-	permResistance=LireRegistre(50)
-	permVanneChaud=LireRegistre(53)
-	dec_z1=LireRegistre(148)*10
-        dec_z2=LireRegistre(172)*10
-        dec_z3=LireRegistre(196)*10
-        dec_z4=LireRegistre(220)*10
-        dec_z5=LireRegistre(244)*10
-	autor_res=LireRegistre(285)
-	print "autorisation resistance= " + str(autor_res)
-	if LireRegistre(77)==0:
-		EcrireRegistre(285,2)
-		EcrireRegistre(77,1)
-	if resistance_init<>autor_res:
-		co_init=3
-		resistance_init=autor_res
-	if co==0:
-		if autor_res==3 or autor_res==2:
-			resistance=True
-		else:
-			resistance=False
+#	time.sleep(0.5)
+	First_Reg=LireRegistres(0,85)
+#	time.sleep(0.5)
+	Second_Reg=LireRegistres(140,84)
+#	time.sleep(0.5)
+	Third_Reg=LireRegistres(229,57)
+        pc_hiver=First_Reg[81]
+        pc_ete=First_Reg[82]
+        dec_hiver=First_Reg[83]
+        dec_ete=First_Reg[84]
+        ouv_vanne=First_Reg[21]
+        co=First_Reg[12]
+        tempZ1=Second_Reg[146-140]
+	print tempZ1
+        pcZ1=Second_Reg[147-140]
+        tempZ2=Second_Reg[170-140]
+        pcZ2=Second_Reg[171-140]
+        tempZ3=Second_Reg[194-140]
+        pcZ3=Second_Reg[195-140]
+        tempZ4=Second_Reg[218-140]
+        pcZ4=Second_Reg[219-140]
+        tempZ5=Third_Reg[242-229]
+        pcZ5=Third_Reg[243-229]
+        Assemblage=First_Reg[33]
+        Mode=First_Reg[70]
+        Priorite=First_Reg[34]
+#       Reg36=First_Reg[36]
+        Bloquer=First_Reg[32]
+        comZ1=Second_Reg[157-140]
+        comZ2=Second_Reg[181-140]
+        comZ3=Second_Reg[205-140]
+        comZ4=Third_Reg[229-229]
+        comZ5=Third_Reg[253-229]
+        presZ1=Second_Reg[140-140]
+	print comZ1
+	print comZ2
+        presZ2=Second_Reg[164-140]
+	Bloquer= First_Reg[32]
+        print Bloquer
+	presZ3=Second_Reg[188-140]
+        presZ4=Second_Reg[212-140]
+        presZ5=Third_Reg[236-229]
+        permResistance=First_Reg[50]
+        permVanneChaud=First_Reg[53]
+	if Second_Reg[148-140]<32768:
+        	dec_z1=Second_Reg[148-140]
 	else:
-		if autor_res==4 or autor_res==2:
-			resistance=True
-		else:
-			resistance=False 
+		dec_z1=Second_Reg[148-140]-65536
+        if Second_Reg[172-140]<32768:
+                dec_z2=Second_Reg[172-140]
+        else:
+                dec_z2=Second_Reg[172-140]-65536
+        if Second_Reg[196-140]<32768:
+                dec_z3=Second_Reg[196-140]
+        else:
+                dec_z3=Second_Reg[196-140]-65536
+        if Second_Reg[222-140]<32768:
+                dec_z4=Second_Reg[222-140]
+        else:
+                dec_z4=Second_Reg[222-140]-65536
+        if Third_Reg[246-229]<32768:
+                dec_z5=Third_Reg[246-229]
+        else:
+                dec_z5=Third_Reg[246-229]-65536
+        mode_z1=Second_Reg[150-140]
+        mode_z2=Second_Reg[174-140]
+        mode_z3=Second_Reg[198-140]
+        mode_z4=Second_Reg[222-140]
+        mode_z5=Third_Reg[246-229]
+#       print "z1 ="+str[mode_z1] print "z2 = "+ str[mode_z2] sonde_gtc=LireRegis
+        print "decalage zone1 = " +str(dec_z1)
+        autor_res=Third_Reg[285-229]
+        if LireRegistre(77)==0:
+                EcrireRegistre(285,2)
+                EcrireRegistre(77,1)
+        if resistance_init<>autor_res:
+                co_init=3
+                resistance_init=autor_res
+        if co==0:
+                if autor_res==3 or autor_res==2:
+                        resistance=True
+                else:
+                        resistance=False
+        else:
+                if autor_res==4 or autor_res==2:
+                        resistance=True
+                else:
+                        resistance=False
         time.sleep(0.5)
-        ts=time.time()
+	ts=time.time()
 
+
+#       eg36=First_Reg[36] ts=time.time()
         vanne()
         consigne()
-	if resistance:
-	        mode()
+        if resistance:
+                mode()
