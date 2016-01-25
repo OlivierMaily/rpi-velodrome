@@ -385,11 +385,11 @@ def mode():
         Z3_Derog=(mode_z3==2)
         Z4_Derog=(mode_z4==2)
         Z5_Derog=(mode_z5==2)
-        Z1_Veille=(mode_z1==3)
-        Z2_Veille=(mode_z2==3)
-        Z3_Veille=(mode_z3==3)
-        Z4_Veille=(mode_z4==3)
-        Z5_Veille=(mode_z5==3)
+        Z1_Veille=(mode_z1==3) or fen_z1
+        Z2_Veille=(mode_z2==3) or fen_z2
+        Z3_Veille=(mode_z3==3) or fen_z3
+        Z4_Veille=(mode_z4==3) or fen_z4
+        Z5_Veille=(mode_z5==3) or fen_z5
 	Zone_Derog=Z1_Derog or Z2_Derog or Z3_Derog or Z4_Derog or Z5_Derog
 	print "derogation z1 = " + str(Z1_Derog) + " ,z2 = " + str(Z2_Derog) + " ,z3 = " + str(Z3_Derog)
 	if not Zone_Derog:
@@ -653,6 +653,11 @@ while 1:
         mode_z3=Second_Reg[198-140]
         mode_z4=Second_Reg[222-140]
         mode_z5=Third_Reg[246-229]
+        fen_z1 = Second_Reg[154-140]
+        fen_z2=Second_Reg[178-140]
+        fen_z3=Second_Reg[202-140]
+        fen_z4=LireRegistre(226)
+        fen_z5=Third_Reg[250-229]
 #       print "z1 ="+str[mode_z1] print "z2 = "+ str[mode_z2] sonde_gtc=LireRegis
         print "decalage zone1 = " +str(dec_z1)
         autor_res=Third_Reg[285-229]
