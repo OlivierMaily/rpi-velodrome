@@ -385,104 +385,109 @@ def mode():
         Z3_Derog=(mode_z3==2)
         Z4_Derog=(mode_z4==2)
         Z5_Derog=(mode_z5==2)
+        Z1_Veille=(mode_z1==3)
+        Z2_Veille=(mode_z2==3)
+        Z3_Veille=(mode_z3==3)
+        Z4_Veille=(mode_z4==3)
+        Z5_Veille=(mode_z5==3)
 	Zone_Derog=Z1_Derog or Z2_Derog or Z3_Derog or Z4_Derog or Z5_Derog
 	print "derogation z1 = " + str(Z1_Derog) + " ,z2 = " + str(Z2_Derog) + " ,z3 = " + str(Z3_Derog)
 	if not Zone_Derog:
 	#Calcul Demande Zone 1 
-		if (TEMP_R_Z1>PC_RE_Z1):
+		if (TEMP_R_Z1>PC_RE_Z1) and not Z1_Veille:
 			z1C=0
 			z1F=1
-		elif (TEMP_R_Z1<PC_RH_Z1):
+		elif (TEMP_R_Z1<PC_RH_Z1) and not Z1_Veille:
 			z1F=0
 			z1C=1
 		else:
 			z1C=0
 			z1F=0
 	#Zone 2 calcul demande
-        	if TEMP_R_Z2>PC_RE_Z2:
+        	if (TEMP_R_Z2>PC_RE_Z2) and not Z2_Veille:
 			z2C=0
                 	z2F=1
-        	elif TEMP_R_Z2<PC_RH_Z2:
+        	elif (TEMP_R_Z2<PC_RH_Z2) and not Z2_Veille:
 			z2F=0
                 	z2C=1
         	else:
                 	z2C=0
                 	z2F=0
 	#Calcul demande Zone3
-        	if TEMP_R_Z3>PC_RE_Z3:
+        	if (TEMP_R_Z3>PC_RE_Z3) and not Z3_Veille:
 			z3C=0
                 	z3F=1
-        	elif TEMP_R_Z3<PC_RH_Z3:
+        	elif (TEMP_R_Z3<PC_RH_Z3) and not Z3_Veille:
 			z3F=0
                 	z3C=1
         	else:
                 	z3C=0
                 	z3F=0
 	#Calcul demande zone4
-        	if TEMP_R_Z4>PC_RE_Z4:
+        	if (TEMP_R_Z4>PC_RE_Z4) and not Z4_Veille:
 			z4C=0
                 	z4F=1
-        	elif TEMP_R_Z4<PC_RH_Z4:
+        	elif (TEMP_R_Z4<PC_RH_Z4) and not Z4_Veille:
 			z4F=0
                 	z4C=1
         	else:
                 	z4C=0
                 	z4F=0
 	#calcul demande zone5
-        	if TEMP_R_Z5>PC_RE_Z5:
+        	if (TEMP_R_Z5>PC_RE_Z5) and not Z5_Veille:
 			z5C=0
                 	z5F=1
-        	elif TEMP_R_Z5<PC_RH_Z5:
+        	elif (TEMP_R_Z5<PC_RH_Z5) and not Z5_Veille:
 			z5F=0
                 	z5C=1
         	else:
                 	z5C=0
                 	z5F=0
 	else:
-	        if (TEMP_R_Z1>PC_RE_Z1) and Z1_Derog :
+	        if (TEMP_R_Z1>PC_RE_Z1) and Z1_Derog  and not Z1_Veille :
                         z1C=0
                         z1F=1
-                elif (TEMP_R_Z1<PC_RH_Z1) and Z1_Derog:
+                elif (TEMP_R_Z1<PC_RH_Z1) and Z1_Derog and not Z1_Veille:
                         z1F=0
                         z1C=1
                 else:
                         z1C=0
                         z1F=0
         #Zone 2 calcul demande
-                if (TEMP_R_Z2>PC_RE_Z2) and Z2_Derog:
+                if (TEMP_R_Z2>PC_RE_Z2) and Z2_Derog and not Z2_Veille:
                         z2C=0
                         z2F=1
-                elif (TEMP_R_Z2<PC_RH_Z2) and Z2_Derog:
+                elif (TEMP_R_Z2<PC_RH_Z2) and Z2_Derog and not Z2_Veille:
                         z2F=0
                         z2C=1
                 else:
                         z2C=0
                         z2F=0
         #Calcul demande Zone3
-                if (TEMP_R_Z3>PC_RE_Z3) and Z3_Derog:
+                if (TEMP_R_Z3>PC_RE_Z3) and Z3_Derog and not Z3_Veille:
                         z3C=0
                         z3F=1
-                elif (TEMP_R_Z3<PC_RH_Z3) and Z3_Derog:
+                elif (TEMP_R_Z3<PC_RH_Z3) and Z3_Derog and not Z3_Veille:
                         z3F=0
                         z3C=1
                 else:
                         z3C=0
                         z3F=0
         #Calcul demande zone4
-                if (TEMP_R_Z4>PC_RE_Z4) and Z4_Derog:
+                if (TEMP_R_Z4>PC_RE_Z4) and Z4_Derog and not Z4_Veille:
                         z4C=0
                         z4F=1
-                elif (TEMP_R_Z4<PC_RH_Z4) and Z4_Derog:
+                elif (TEMP_R_Z4<PC_RH_Z4) and Z4_Derog and not Z4_Veille:
                         z4F=0
                         z4C=1
                 else:
                         z4C=0
                         z4F=0
         #calcul demande zone5
-                if (TEMP_R_Z5>PC_RE_Z5) and Z5_Derog:
+                if (TEMP_R_Z5>PC_RE_Z5) and Z5_Derog and not Z5_Veille:
                         z5C=0
                         z5F=1
-                elif (TEMP_R_Z5<PC_RH_Z5) and Z5_Derog:
+                elif (TEMP_R_Z5<PC_RH_Z5) and Z5_Derog and not Z5_Veille:
                         z5F=0
                         z5C=1
                 else:
