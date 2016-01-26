@@ -385,11 +385,11 @@ def mode():
         Z3_Derog=(mode_z3==2)
         Z4_Derog=(mode_z4==2)
         Z5_Derog=(mode_z5==2)
-        Z1_Veille=(mode_z1==3) or fen_z1
-        Z2_Veille=(mode_z2==3) or fen_z2
-        Z3_Veille=(mode_z3==3) or fen_z3
-        Z4_Veille=(mode_z4==3) or fen_z4
-        Z5_Veille=(mode_z5==3) or fen_z5
+        Z1_Veille=(mode_z1==3) or fen_z1 or (fen_z2 and (presZ1==PresZ2)) or (fen_z3 and (presZ1==PresZ3)) or (fen_z4 and (presZ1==PresZ4)) or (fen_z5 and (presZ1==PresZ5))
+        Z2_Veille=(mode_z2==3) or fen_z2 or (fen_z1 and (presZ1==PresZ2)) or (fen_z3 and (presZ2==PresZ3)) or (fen_z4 and (presZ2==PresZ4)) or (fen_z5 and (presZ2==PresZ5))
+        Z3_Veille=(mode_z3==3) or fen_z3 or (fen_z1 and (presZ1==PresZ3)) or (fen_z2 and (presZ2==PresZ3)) or (fen_z4 and (presZ3==PresZ4)) or (fen_z5 and (presZ3==PresZ5))
+        Z4_Veille=(mode_z4==3) or fen_z4 or (fen_z1 and (presZ1==PresZ4)) or (fen_z2 and (presZ2==PresZ4)) or (fen_z3 and (presZ3==PresZ4)) or (fen_z5 and (presZ4==PresZ5))
+        Z5_Veille=(mode_z5==3) or fen_z5 or (fen_z1 and (presZ1==PresZ5)) or (fen_z2 and (presZ2==PresZ5)) or (fen_z3 and (presZ3==PresZ5)) or (fen_z4 and (presZ4==PresZ5))
 	Zone_Derog=Z1_Derog or Z2_Derog or Z3_Derog or Z4_Derog or Z5_Derog
 	print "derogation z1 = " + str(Z1_Derog) + " ,z2 = " + str(Z2_Derog) + " ,z3 = " + str(Z3_Derog)
 	if not Zone_Derog:
