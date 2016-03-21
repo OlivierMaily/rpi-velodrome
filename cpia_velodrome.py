@@ -257,6 +257,9 @@ def consigne():
 				EcrireRegistre(244,decalage_temp_ete/10,sig=True)	
                         EcrireRegistre(36,2000-dec_ete,0)
                         EcrireRegistre(37,2000+dec_ete,0)
+                        EcrireRegistre(38,1600+decalage_temp_ete)
+                        EcrireRegistre(39,2800+decalage_temp_ete)
+                        EcrireRegistre(40,1600+decalage_temp_ete)
 			Blocage_fonctionnement=1
 			if resistance:
 		        	if Assemblage<>4:
@@ -285,6 +288,9 @@ def consigne():
 				EcrireRegistre(244,decalage_temp_hiver/10,sig=True)
                         EcrireRegistre(36,2000-dec_hiver,0)
                         EcrireRegistre(37,2000+dec_hiver)
+                        EcrireRegistre(38,1600+decalage_temp_hiver)
+                        EcrireRegistre(39,2800+decalage_temp_hiver)
+                        EcrireRegistre(40,1600+decalage_temp_hiver)
 			Blocage_fonctionnement=1
 			if resistance:
 				if Assemblage<>5:
@@ -528,6 +534,9 @@ def mode():
                         EcrireRegistre(244,decalage_temp_ete/10,sig=True)
                         EcrireRegistre(36,2000-dec_ete)
                         EcrireRegistre(37,2000+dec_ete)
+                        EcrireRegistre(38,1600+decalage_temp_ete)
+                        EcrireRegistre(39,2800+decalage_temp_ete)
+                        EcrireRegistre(40,1600+decalage_temp_ete)
                         ChangerTemp=0
                         Blocage_focntionnement=1
                 elif ChangerTemp==2:
@@ -539,6 +548,9 @@ def mode():
                         EcrireRegistre(244,decalage_temp_hiver/10,sig=True)
                         EcrireRegistre(36,2000-dec_hiver)
                         EcrireRegistre(37,2000+dec_hiver)
+                        EcrireRegistre(38,1600+decalage_temp_hiver)
+                        EcrireRegistre(39,2800+decalage_temp_hiver)
+                        EcrireRegistre(40,1600+decalage_temp_hiver)
                         ChangerTemp=0
                         Blocage_fonctionnement=1
 	if anticourcycle:
@@ -596,6 +608,7 @@ while 1:
         dec_ete=First_Reg[84]
         ouv_vanne=First_Reg[21]
         co=First_Reg[12]
+        
         tempZ1=Second_Reg[146-140]
 	print tempZ1
         pcZ1=Second_Reg[147-140]
