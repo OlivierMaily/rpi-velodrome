@@ -613,8 +613,8 @@ def mode():
         print First_Reg[40]
 
 
-EcrireRegistre(71,0)
-EcrireRegistre(72,0)
+#EcrireRegistre(71,0)
+#EcrireRegistre(72,0)
 resistance_init=LireRegistre(285)
 while 1:
 #	time.sleep(0.5)
@@ -630,8 +630,12 @@ while 1:
         ouv_vanne=First_Reg[21]
         co=First_Reg[12]
         pc_horsgel= First_Reg[69]
-        pc_Inoc_Chaud=First_Reg[71]
-        pc_Inoc_Froid=First_Reg[72]
+        pc_Inoc_Chaud=First_Reg[71]*100
+        pc_Inoc_Froid=First_Reg[72]*100
+        if First_Reg[71]==720:
+        	EcrireRegistre(72,29)
+        	EcrireRegistre(69,1600)
+		EcrireRegistre(71,16)
         print 'inoc chaud'
         print pc_Inoc_Chaud
         print First_Reg[38]
