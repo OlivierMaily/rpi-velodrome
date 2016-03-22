@@ -614,6 +614,15 @@ while 1:
         pc_horsgel= First_Reg[69]
         pc_Inoc_Chaud=First_Reg[71] * 100
         pc_Inoc_Froid=First_Reg[72] * 100
+        print 'inoc chaud'
+        print pc_Inoc_Chaud
+        print First_Reg[38]
+        print 'inoc froid'
+        print pc_Inoc_Froid
+        print First_Reg[39]
+        print 'antigel'
+        print pc_horsgel
+        print First_Reg[40]
         tempZ1=Second_Reg[146-140]
 	print tempZ1
         pcZ1=Second_Reg[147-140]
