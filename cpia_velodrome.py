@@ -310,6 +310,15 @@ def consigne():
 					EcrireRegistre(33,3)
 
                 co_init=co
+        print 'inoc chaud'
+        print pc_Inoc_Chaud
+        print First_Reg[38]
+        print 'inoc froid'
+        print pc_Inoc_Froid
+        print First_Reg[39]
+        print 'antigel'
+        print pc_horsgel
+        print First_Reg[40]
 
 
 def mode():
@@ -593,6 +602,15 @@ def mode():
                         if Bloquer<>1:
                                 EcrireRegistre(32,1)
                                 Blocage_fonctionnement=0
+        print 'inoc chaud'
+        print pc_Inoc_Chaud
+        print First_Reg[38]
+        print 'inoc froid'
+        print pc_Inoc_Froid
+        print First_Reg[39]
+        print 'antigel'
+        print pc_horsgel
+        print First_Reg[40]
 
 
 EcrireRegistre(71,0)
