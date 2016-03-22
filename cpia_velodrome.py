@@ -630,8 +630,8 @@ while 1:
         ouv_vanne=First_Reg[21]
         co=First_Reg[12]
         pc_horsgel= First_Reg[69]
-        pc_Inoc_Chaud=First_Reg[71] * 100
-        pc_Inoc_Froid=First_Reg[72] * 100
+        pc_Inoc_Chaud=First_Reg[71]
+        pc_Inoc_Froid=First_Reg[72]
         print 'inoc chaud'
         print pc_Inoc_Chaud
         print First_Reg[38]
