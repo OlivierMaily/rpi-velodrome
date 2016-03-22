@@ -604,7 +604,7 @@ def mode():
                                 Blocage_fonctionnement=0
         print 'inoc chaud'
         print pc_Inoc_Chaud
-        print First_Reg[38]
+        print First_Reg[71]
         print 'inoc froid'
         print pc_Inoc_Froid
         print First_Reg[39]
