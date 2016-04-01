@@ -546,6 +546,7 @@ def mode():
                         EcrireRegistre(244,decalage_temp_ete/10,sig=True)
                         EcrireRegistre(36,2000-dec_ete)
                         EcrireRegistre(37,2000+dec_ete)
+                        print pc_Inoc_Chaud+decalage_temp_ete
                         EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_ete)
                         EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_ete)
