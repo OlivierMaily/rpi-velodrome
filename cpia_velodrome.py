@@ -260,9 +260,8 @@ def consigne():
 				EcrireRegistre(244,decalage_temp_ete/10,sig=True)	
                         EcrireRegistre(36,2000-dec_ete,0)
                         EcrireRegistre(37,2000+dec_ete,0)
-                        EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
-                        time.sleep(0.5)
                         EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_ete)
+                        EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_ete)
 			Blocage_fonctionnement=1
 			if resistance:
@@ -292,8 +291,8 @@ def consigne():
 				EcrireRegistre(244,decalage_temp_hiver/10,sig=True)
                         EcrireRegistre(36,2000-dec_hiver,0)
                         EcrireRegistre(37,2000+dec_hiver)
-                        EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_hiver)
                         EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_hiver)
+                        EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_hiver)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_hiver)
 			Blocage_fonctionnement=1
 			if resistance:
@@ -539,9 +538,8 @@ def mode():
                         EcrireRegistre(36,2000-dec_ete)
                         EcrireRegistre(37,2000+dec_ete)
                         print pc_Inoc_Chaud+decalage_temp_ete
-                        EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
-                        time.sleep(0.5)
                         EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_ete)
+                        EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_ete)
                         ChangerTemp=0
                         Blocage_focntionnement=1
@@ -554,8 +552,8 @@ def mode():
                         EcrireRegistre(244,decalage_temp_hiver/10,sig=True)
                         EcrireRegistre(36,2000-dec_hiver)
                         EcrireRegistre(37,2000+dec_hiver)
-                        EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_hiver)
                         EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_hiver)
+                        EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_hiver)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_hiver)
                         ChangerTemp=0
                         Blocage_fonctionnement=1
