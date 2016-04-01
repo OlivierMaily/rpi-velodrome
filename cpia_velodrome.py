@@ -261,6 +261,7 @@ def consigne():
                         EcrireRegistre(36,2000-dec_ete,0)
                         EcrireRegistre(37,2000+dec_ete,0)
                         EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
+                        time.sleep(0.5)
                         EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_ete)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_ete)
 			Blocage_fonctionnement=1
@@ -310,15 +311,6 @@ def consigne():
 					EcrireRegistre(33,3)
 
                 co_init=co
-        print 'inoc chaud'
-        print pc_Inoc_Chaud
-        print First_Reg[38]
-        print 'inoc froid'
-        print pc_Inoc_Froid
-        print First_Reg[39]
-        print 'antigel'
-        print pc_horsgel
-        print First_Reg[40]
 
 
 def mode():
@@ -548,6 +540,7 @@ def mode():
                         EcrireRegistre(37,2000+dec_ete)
                         print pc_Inoc_Chaud+decalage_temp_ete
                         EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
+                        time.sleep(0.5)
                         EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_ete)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_ete)
                         ChangerTemp=0
@@ -603,15 +596,7 @@ def mode():
                         if Bloquer<>1:
                                 EcrireRegistre(32,1)
                                 Blocage_fonctionnement=0
-        print 'inoc chaud'
-        print pc_Inoc_Chaud
-        print First_Reg[71]
-        print 'inoc froid'
-        print pc_Inoc_Froid
-        print First_Reg[39]
-        print 'antigel'
-        print pc_horsgel
-        print First_Reg[40]
+
 
 
 #EcrireRegistre(71,0)
@@ -637,15 +622,6 @@ while 1:
         	EcrireRegistre(72,29)
         	EcrireRegistre(69,1600)
 		EcrireRegistre(71,16)
-        print 'inoc chaud'
-        print pc_Inoc_Chaud
-        print First_Reg[38]
-        print 'inoc froid'
-        print pc_Inoc_Froid
-        print First_Reg[39]
-        print 'antigel'
-        print pc_horsgel
-        print First_Reg[40]
         tempZ1=Second_Reg[146-140]
 	print tempZ1
         pcZ1=Second_Reg[147-140]
