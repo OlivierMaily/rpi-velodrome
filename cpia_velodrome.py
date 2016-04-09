@@ -280,7 +280,7 @@ def consigne():
 
                         decalage_temp_hiver=max(min(1000,(2000-pc_hiver)),-1000)
                         if z1:
-				EcrireRegistre(148,int(decalage_temp_hiver/10),sig=True)
+				EcrireRegistre(148,decalage_temp_hiver/10,sig=True)
                         if z2:
 				EcrireRegistre(172,decalage_temp_hiver/10,sig=True)
                         if z3:
