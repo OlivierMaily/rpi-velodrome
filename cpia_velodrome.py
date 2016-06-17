@@ -108,7 +108,7 @@ def LireRegistres(registre,nbreg):
         while 1:
                 try:
                         res=ReadRegisters(registre,nbreg)
-						                except NoneException:
+                except NoneException:
                         print 'None eviter'
                 except IOError:
                         print 'lecture Impossible du registre :'
