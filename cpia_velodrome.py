@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 import minimalmodbus
 import time
+from subprocess import call
+i=0
 m=minimalmodbus.Instrument('/dev/ttyAMA0',1)
+print i
+print i
 global co
 global pc_ete
 global pc_hiver
@@ -30,10 +34,14 @@ global presZ4
 global pc_horsgel
 global pc_Inoc_Chaud
 global pc_Inoc_Froid
-
+global decalage_initial_z1
+#call(["ls", "-l"])
 m.serial.baudrate =38400
 m.serial.stopbits =2
 m.serial.timeout=0.250
+
+
+
 initZ1=0
 initZ2=0
 initZ3=0
@@ -52,8 +60,8 @@ zoneInit=0
 time_init=0
 time_for_vanne=0
 forcage_vanne=0
-m.write_register(284,0,0)
 co_init=2
+Bloquer=0
 ChangerTemp=0
 compteur=0
 Compt=0
@@ -82,18 +90,27 @@ def ReadRegister(registre):
 	else:
 		return result
 def LireRegistre(registre):
+        erreur=0
 	while 1:
 		try:
         		res=ReadRegister(registre)
 		except NoneException:
 			print 'None eviter'
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
         	except IOError:
 	                print 'lecture Impossible du registre :'
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
+
+#                        call(["sudo","/etc/rc.local"])
                 	print registre
         	except ValueError:
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
+#                        call(["sudo","/etc/rc.local"])
                 	print 'lecture Impossible du registre a cause du type de valeur :'
                 	print registre
         	except TypeError:
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
+#                        call(["sudo","/etc/rc.local"])
                 	print 'EOF ERROR'
 		else:
 			return res
@@ -107,13 +124,21 @@ def LireRegistres(registre,nbreg):
                 try:
                         res=ReadRegisters(registre,nbreg)
                 except NoneException:
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
+#                        call(["sudo","/etc/rc.local"])
                         print 'None eviter'
                 except IOError:
                         print 'lecture Impossible du registre :'
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
+#                        call(["sudo","/etc/rc.local"])
                         print registre
                 except ValueError:
                         print 'lecture Impossible du registre a cause du type de valeur :'
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
+#                        call(["sudo","/etc/rc.local"])
                         print registre
+        	except TypeError:
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
                 else:
                         return res
 
@@ -135,16 +160,29 @@ def EcrireRegistre(Reg,valeur,sig=False):
                        			m.write_register(Reg,valeur)
 			else:
 				Write=False
+                except NoneException:
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
                 except IOError:
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
                         Compt+=1
 		except TypeError:
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
                         Compt+=1
                 except (ValueError):
+                        call(["sudo","systemctl","stop","serial-getty@ttyAMA0.service"])
                         Compt+=1
 		else:
 			Compt=0
 			Write=False
 			return
+
+
+
+
+
+LireRegistre(1)
+m.write_register(284,0,0)
+
 
 def vanne():
         global time_init
@@ -202,12 +240,12 @@ def consigne():
                         EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_ete)
                         EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_ete)
-			if resistance:
-                                EcrireRegistre(33,6)
-				EcrireRegistre(50,0)
-				EcrireRegistre(53,0)
-			else:
-				EcrireRegistre(33,4)
+			#if resistance:
+                                #EcrireRegistre(33,6)
+			EcrireRegistre(50,0)
+			EcrireRegistre(53,0)
+			#else:
+			EcrireRegistre(33,4)
                         Blocage_fonctionnement=1
 				
 				
@@ -249,6 +287,7 @@ def mode():
         global z3F
         global z4C
         global z4F
+	global decalage_initial_z1
         if presZ1 <>0:
                 z1=1
         else:
@@ -273,7 +312,7 @@ def mode():
                 z4=0
 		z4C=0
 		z4F=0
-        zoneTot=z1+z2+z3+z4
+        zoneTot=(z1*(comZ1<7200))+(z2*(comZ2<7200))+(z3*(comZ3<7200))+(z4*(comZ4<7200))
 	temps=time.time()
 	global anticourcycle
         global zoneInit
@@ -305,10 +344,10 @@ def mode():
 	Z2_Derog=(mode_z2==2)
         Z3_Derog=(mode_z3==2)
         Z4_Derog=(mode_z4==2)
-        Z1_Veille=(mode_z1==3) or fen_z1 or (fen_z2 and (presZ1==presZ2)) or (fen_z3 and (presZ1==presZ3)) or (fen_z4 and (presZ1==presZ4))
-        Z2_Veille=(mode_z2==3) or fen_z2 or (fen_z1 and (presZ1==presZ2)) or (fen_z3 and (presZ2==presZ3)) or (fen_z4 and (presZ2==presZ4))
-        Z3_Veille=(mode_z3==3) or fen_z3 or (fen_z1 and (presZ1==presZ3)) or (fen_z2 and (presZ2==presZ3)) or (fen_z4 and (presZ3==presZ4))
-        Z4_Veille=(mode_z4==3) or fen_z4 or (fen_z1 and (presZ1==presZ4)) or (fen_z2 and (presZ2==presZ4)) or (fen_z3 and (presZ3==presZ4))
+        Z1_Veille=(mode_z1==3) or fen_z1 or (fen_z2 and (presZ1==presZ2)) or (fen_z3 and (presZ1==presZ3)) or (fen_z4 and (presZ1==presZ4)) or comZ1>7200
+        Z2_Veille=(mode_z2==3) or fen_z2 or (fen_z1 and (presZ1==presZ2)) or (fen_z3 and (presZ2==presZ3)) or (fen_z4 and (presZ2==presZ4)) or comZ2>7200
+        Z3_Veille=(mode_z3==3) or fen_z3 or (fen_z1 and (presZ1==presZ3)) or (fen_z2 and (presZ2==presZ3)) or (fen_z4 and (presZ3==presZ4)) or comZ3>7200
+        Z4_Veille=(mode_z4==3) or fen_z4 or (fen_z1 and (presZ1==presZ4)) or (fen_z2 and (presZ2==presZ4)) or (fen_z3 and (presZ3==presZ4)) or comZ4>7200
 	Zone_Derog=Z1_Derog or Z2_Derog or Z3_Derog or Z4_Derog
 	print "derogation z1 = " + str(Z1_Derog) + " ,z2 = " + str(Z2_Derog) + " ,z3 = " + str(Z3_Derog)
 	if not Zone_Derog:
@@ -396,10 +435,11 @@ def mode():
 	print "zone 1 F= " +str(z1F) + " en chaud = " + str(z1C)
         print "zone 2 F= " +str(z2F) + " en chaud = " + str(z2C)
         print "zone 3 F= " +str(z3F) + " en chaud = " + str(z3C)
+        print "zone 4 F= " +str(z4F) + " en chaud = " + str(z4C)
 	
         if co==1:
 		print 'anticourcycle = '+str(anticourcycle)
-                if ((z1F or z2F or z3F or z4F) and Assemblage==6 and not anticourcycle):
+                if ((z1F or z2F or z3F or z4F)  and not anticourcycle):
                         EcrireRegistre(33,4)
                         decalage_temp_ete=2000-pc_ete
                         EcrireRegistre(148,decalage_temp_ete/10,sig=True)
@@ -412,17 +452,15 @@ def mode():
                         EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_ete)
                         EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_ete)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_ete)
-                        Blocage_focntionnement=1
-			temps_dem=temps
-			anticourcycle=True
-			print 'TEmps dem='+str(temps_dem)
-                elif  (not (z1F or z2F or z3F or z4F) and (z1C or z2C or z3C or z4C) and Assemblage==4  and not anticourcycle):
-                        EcrireRegistre(33,6)
-                        EcrireRegistre(70,1)
+                elif  (not (z1F or z2F or z3F or z4F)) and (z1C or z2C or z3C or z4C)  and not anticourcycle:
+                        EcrireRegistre(33,7)
+
+                        #EcrireRegistre(70,1)
 			temps_dem=temps
 			print 'Temps_dem ='+str(temps_dem)
-			anticourcycle=True
+			#anticourcycle=True
 			decalage_temp_hiver=2000-pc_hiver
+                        print "decalage temp hiver = " + str(decalage_temp_hiver/10)
                         EcrireRegistre(148,decalage_temp_hiver/10,sig=True)
                         EcrireRegistre(172,decalage_temp_hiver/10,sig=True)
                         EcrireRegistre(196,decalage_temp_hiver/10,sig=True)
@@ -432,7 +470,13 @@ def mode():
                         EcrireRegistre(39,pc_Inoc_Froid+decalage_temp_hiver)
                         EcrireRegistre(38,pc_Inoc_Chaud+decalage_temp_hiver)
                         EcrireRegistre(40,pc_horsgel+decalage_temp_hiver)
-                        Blocage_fonctionnement=1
+		if decalage_initial_z1<>LireRegistre(148):
+                       	Blocage_fonctionnement=1
+			temps_dem=temps
+			anticourcycle=True
+			print 'TEmps dem='+str(temps_dem)
+			decalage_initial_z1=LireRegistre(148)
+
 	if anticourcycle:
 		if (temps>temps_dem+600):
 			anticourcycle=False
@@ -447,20 +491,24 @@ def mode():
                         initZ2=0
                         initZ3=0
                         initZ4=0
-			print "pourquoi je n ecris pas"
+			print "JE BLOQUE LE FONCTIONNEMENT en attendant comm"
                         EcrireRegistre(32,2)
 			#Bloquer=2
                 if z1==1 and comZ1<10 and initZ1==0:
                         initZ1=1
+                        print "th z1 a comm"
                         zoneInit+=1
                 if z2==1 and comZ2<10 and initZ2==0:
+                        print "th z2 a comm"
                         zoneInit+=1
                         initZ2=1
                 if z3==1 and comZ3<10 and initZ3==0:
                         zoneInit+=1
+                        print "th z3 a comm"
                         initZ3=1
                 if z4==1 and comZ4<10 and initZ4==0:
                         zoneInit+=1
+                        print "th z4 a comm"
                         initZ4=1
                 if zoneInit==zoneTot:
                         if Bloquer<>1:
@@ -474,7 +522,10 @@ def mode():
 resistance_init=LireRegistre(285)
 pc_hiver_init=LireRegistre(81)
 pc_ete_init=LireRegistre(82)
+decalage_initial_z1=LireRegistre(148)
+
 while 1:
+#        print 'uygwuydgyewyueiueuhewueduihewiuhedwgyuedyugewugyeuygeuygedweugyeduwygdeuy dec initial a ' + str(decalage_initial_z1)
 #	time.sleep(0.5)
 	First_Reg=LireRegistres(0,85)
 #	time.sleep(0.5)
@@ -513,7 +564,7 @@ while 1:
         Mode=First_Reg[70]
         Priorite=First_Reg[34]
 #       Reg36=First_Reg[36]
-        Bloquer=First_Reg[32]
+#        Bloquer=First_Reg[32]
         comZ1=Second_Reg[157-140]
         comZ2=Second_Reg[181-140]
         comZ3=Second_Reg[205-140]
@@ -522,7 +573,6 @@ while 1:
 	print comZ1
 	print comZ2
         presZ2=Second_Reg[164-140]
-	Bloquer= First_Reg[32]
 	presZ3=Second_Reg[188-140]
         presZ4=Second_Reg[212-140]
         permResistance=First_Reg[50]
@@ -547,6 +597,7 @@ while 1:
         mode_z2=Second_Reg[174-140]
         mode_z3=Second_Reg[198-140]
         mode_z4=Second_Reg[222-140]
+	Bloquer= First_Reg[32]
         fen_z1 = Second_Reg[154-140]
         fen_z2=Second_Reg[178-140]
         fen_z3=Second_Reg[202-140]
@@ -570,8 +621,11 @@ while 1:
                 else:
                         resistance=False
         time.sleep(0.5)
-	ts=time.time()
+        i+=1
+        #print "i = " +str(i)
+        ts=time.time()
         vanne()
-        consigne()
+	if not resistance or co==0:
+	      	consigne()
         if resistance:
                 mode()
